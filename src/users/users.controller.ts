@@ -15,9 +15,9 @@ export class UsersController {
 
   // Get single user by id (protected)
   @UseGuards(JwtAuthGuard)
-  @Get(':users_id')
-  async getOne(@Param('users_id') users_id: string) {
-    return this.usersService.findById(+users_id);
+  @Get(':id')
+  async getOne(@Param('id') id: string) {
+    return this.usersService.findById(+id);
   }
 
   // Create user (open - for demo)
@@ -28,15 +28,15 @@ export class UsersController {
 
   // Update user (protected)
   @UseGuards(JwtAuthGuard)
-  @Put(':users_id')
-  async update(@Param('users_id') users_id: string, @Body() body: any) {
-    return this.usersService.updateUser(+users_id, body);
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() body: any) {
+    return this.usersService.updateUser(+id, body);
   }
 
   // Delete user (protected)
   @UseGuards(JwtAuthGuard)
-  @Delete(':users_id')
-  async remove(@Param('users_id') users_id: string) {
-    return this.usersService.deleteUser(+users_id);
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return this.usersService.deleteUser(+id);
   }
 }

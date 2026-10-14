@@ -15,9 +15,9 @@ export class CategoryController {
 
   // Get single category by id (protected)
   @UseGuards(JwtAuthGuard)
-  @Get(':category_id')
-  async getOne(@Param('category_id') category_id: string) {
-    return this.categoryService.findById(+category_id);
+  @Get(':id')
+  async getOne(@Param('id') id: string) {
+    return this.categoryService.findById(+id);
   }
 
   // Create category (open - for demo)
@@ -28,15 +28,15 @@ export class CategoryController {
 
   // Update category (protected)
   @UseGuards(JwtAuthGuard)
-  @Put(':category_id')
-  async update(@Param('category_id') category_id: string, @Body() body: any) {
-    return this.categoryService.updateCategory(+category_id, body);
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() body: any) {
+    return this.categoryService.updateCategory(+id, body);
   }
 
   // Delete category (protected)
   @UseGuards(JwtAuthGuard)
-  @Delete(':category_id')
-  async remove(@Param('category_id') category_id: string) {
-    return this.categoryService.deleteCategory(+category_id);
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return this.categoryService.deleteCategory(+id);
   }
 }

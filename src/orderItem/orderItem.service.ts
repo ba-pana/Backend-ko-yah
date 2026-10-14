@@ -10,7 +10,7 @@ export class OrderItemService {
 
   async createOrderItem(order_id: string, laptop_id: string, quantity = 1) {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
-      'SELECT laptop_id, price FROM laptop WHERE laptop_id = ?',
+      'SELECT id, price FROM laptop WHERE id = ?',
       [laptop_id],
     );
 
@@ -29,31 +29,31 @@ export class OrderItemService {
     );
 
     await this.pool().execute(
-      `UPDATE orders SET total_amount = (SELECT SUM (subtotal) FROM orderItem WHERE order_id = ?) WHERE order_id = ?`,
+      `UPDATE orders SET total_amount = (SELECT SUM (subtotal) FROM orderItem WHERE order_id = ?) WHERE id = ?`,
       [order_id, order_id],
     );
 
-    return { order_item_id: result.insertId, order_id, laptop_id, quantity, unit_price, sub_total };
+    return { id: result.insertId, order_id, laptop_id, quantity, unit_price, sub_total };
   }
 
 
 
-  async findById(orderItem_id: number) {
+  async findById(id: number) {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
-      'SELECT order_item_id, order_id, laptop_id, quantity, unit_price, subtotal FROM orderItem WHERE order_item_id = ?',
-      [orderItem_id],
+      'SELECT * FROM orderItem WHERE id = ?',
+      [id],
     );
     return rows[0];
   }
 
   async getAll() {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
-      'SELECT order_item_id, order_id, laptop_id, quantity, unit_price, subtotal FROM orderItem',
+      'SELECT * FROM orderItem',
     );
     return rows;
   }
 
-  async updateOrderItem(orderItem_id: number, partial: { order_id?: string; laptop_id?: string; quantity?: number; unit_price?: number; subtotal?: number;  }) {
+  async updateOrderItem(id: number, partial: { order_id?: string; laptop_id?: string; quantity?: number; unit_price?: number; subtotal?: number;  }) {
     const fields: string[] = [];
     const values: any[] = [];
 
@@ -72,20 +72,20 @@ export class OrderItemService {
       values.push(partial.subtotal);
     }
 
-    if (fields.length === 0) return await this.findById(orderItem_id);
+    if (fields.length === 0) return await this.findById(id);
 
-    values.push(orderItem_id);
+    values.push(id);
 
-    const sql = `UPDATE orderItem SET ${fields.join(', ')} WHERE order_item_id = ?`;
+    const sql = `UPDATE orderItem SET ${fields.join(', ')} WHERE id = ?`;
     await this.pool().execute(sql, values);
 
-    return this.findById(orderItem_id);
+    return this.findById(id);
   }
 
-  async deleteOrderItem(orderItem_id: number) {
+  async deleteOrderItem(id: number) {
     const [result] = await this.pool().execute<OkPacket>(
-      'DELETE FROM orderItem WHERE order_item_id = ?',
-      [orderItem_id],
+      'DELETE FROM orderItem WHERE id = ?',
+      [id],
     );
     return result.affectedRows > 0;
   }

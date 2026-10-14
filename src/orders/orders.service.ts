@@ -13,25 +13,25 @@ export class OrdersService {
       'INSERT INTO orders (users_id, order_status, total_amount) VALUES (?, ?, ?)',
       [users_id, order_status, total_amount],
     );
-    return { order_id: result.insertId, users_id, order_status, total_amount };
+    return { id: result.insertId, users_id, order_status, total_amount };
   }
 
-  async findById(order_id: number) {
+  async findById(id: number) {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
-      'SELECT order_id, users_id, order_status, total_amount, order_date FROM orders WHERE order_id = ?',
-      [order_id],
+      'SELECT * FROM orders WHERE id = ?',
+      [id],
     );
     return rows[0];
   }
 
   async getAll() {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
-      'SELECT order_id, users_id, order_status, total_amount, order_date FROM orders',
+      'SELECT * FROM orders',
     );
     return rows;
   }
 
-  async updateOrder(order_id: number, partial: { users_id?: string; order_status?: string; total_amount?: number; }) {
+  async updateOrder(id: number, partial: { users_id?: string; order_status?: string; total_amount?: number; }) {
     const fields: string[] = [];
     const values: any[] = [];
 
@@ -45,20 +45,20 @@ export class OrdersService {
       values.push(partial.total_amount);
     }
 
-    if (fields.length === 0) return await this.findById(order_id);
+    if (fields.length === 0) return await this.findById(id);
 
-    values.push(order_id);
+    values.push(id);
 
-    const sql = `UPDATE orders SET ${fields.join(', ')} WHERE order_id = ?`;
+    const sql = `UPDATE orders SET ${fields.join(', ')} WHERE id = ?`;
     await this.pool().execute(sql, values);
 
-    return this.findById(order_id);
+    return this.findById(id);
   }
 
-  async deleteOrder(order_id: number) {
+  async deleteOrder(id: number) {
     const [result] = await this.pool().execute<OkPacket>(
-      'DELETE FROM orders WHERE order_id = ?',
-      [order_id],
+      'DELETE FROM orders WHERE id = ?',
+      [id],
     );
     return result.affectedRows > 0;
   }

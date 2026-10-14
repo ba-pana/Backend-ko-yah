@@ -15,9 +15,9 @@ export class BrandController {
 
   // Get single brand by id (protected)
   @UseGuards(JwtAuthGuard)
-  @Get(':brand_id')
-  async getOne(@Param('brand_id') brand_id: string) {
-    return this.brandService.findById(+brand_id);
+  @Get(':id')
+  async getOne(@Param('id') id: string) {
+    return this.brandService.findById(+id);
   }
 
   // Create brand (open - for demo)
@@ -28,15 +28,15 @@ export class BrandController {
 
   // Update brand (protected)
   @UseGuards(JwtAuthGuard)
-  @Put(':brand_id')
-  async update(@Param('brand_id') brand_id: string, @Body() body: any) {
-    return this.brandService.updateBrand(+brand_id, body);
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() body: any) {
+    return this.brandService.updateBrand(+id, body);
   }
 
   // Delete brand (protected)
   @UseGuards(JwtAuthGuard)
-  @Delete(':brand_id')
-  async remove(@Param('brand_id') brand_id: string) {
-    return this.brandService.deleteBrand(+brand_id);
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return this.brandService.deleteBrand(+id);
   }
 }

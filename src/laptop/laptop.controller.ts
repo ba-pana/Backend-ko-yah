@@ -15,9 +15,9 @@ export class LaptopController {
 
   // Get single laptop by id (protected)
   @UseGuards(JwtAuthGuard)
-  @Get(':laptop_id')
-  async getOne(@Param('laptop_id') laptop_id: string) {
-    return this.laptopService.findById(+laptop_id);
+  @Get(':id')
+  async getOne(@Param('id') id: string) {
+    return this.laptopService.findById(+id);
   }
 
   // Create laptop (open - for demo)
@@ -32,15 +32,15 @@ export class LaptopController {
 
   // Update laptop (protected)
   @UseGuards(JwtAuthGuard)
-  @Put(':laptop_id')
-  async update(@Param('laptop_id') laptop_id: string, @Body() body: any) {
-    return this.laptopService.updateLaptop(+laptop_id, body);
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() body: any) {
+    return this.laptopService.updateLaptop(+id, body);
   }
 
   // Delete laptop (protected)
   @UseGuards(JwtAuthGuard)
-  @Delete(':laptop_id')
-  async remove(@Param('laptop_id') laptop_id: string) {
-    return this.laptopService.deleteLaptop(+laptop_id);
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return this.laptopService.deleteLaptop(+id);
   }
 }

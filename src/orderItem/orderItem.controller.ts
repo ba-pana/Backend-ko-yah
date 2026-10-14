@@ -15,9 +15,9 @@ export class OrderItemController {
 
   // Get single order item by id (protected)
   @UseGuards(JwtAuthGuard)
-  @Get(':orderItem_id')
-  async getOne(@Param('orderItem_id') orderItem_id: string) {
-    return this.orderItemService.findById(+orderItem_id);
+  @Get(':id')
+  async getOne(@Param('id') id: string) {
+    return this.orderItemService.findById(+id);
   }
 
   // Create order item (open - for demo)
@@ -28,15 +28,15 @@ export class OrderItemController {
 
   // Update order item (protected)
   @UseGuards(JwtAuthGuard)
-  @Put(':orderItem_id')
-  async update(@Param('orderItem_id') orderItem_id: string, @Body() body: any) {
-    return this.orderItemService.updateOrderItem(+orderItem_id, body);
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() body: any) {
+    return this.orderItemService.updateOrderItem(+id, body);
   }
 
   // Delete order item (protected)
   @UseGuards(JwtAuthGuard)
-  @Delete(':orderItem_id')
-  async remove(@Param('orderItem_id') orderItem_id: string) {
-    return this.orderItemService.deleteOrderItem(+orderItem_id);
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return this.orderItemService.deleteOrderItem(+id);
   }
 }

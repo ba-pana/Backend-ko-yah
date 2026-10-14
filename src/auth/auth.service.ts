@@ -13,12 +13,12 @@ export class AuthService {
     if (!user) return null;
 
     const valid = await bcrypt.compare(pass, user.password);
-    if (valid) return { users_id: user.users_id, username: user.username, role: user.role };
+    if (valid) return { id: user.id, username: user.username, role: user.role };
     return null;
   }
 
-  async login(user: { users_id: number; username: string; role: string }) {
-    const payload = { sub: user.users_id, username: user.username, role: user.role };
+  async login(user: { id: number; username: string; role: string }) {
+    const payload = { sub: user.id, username: user.username, role: user.role };
     const accessToken = this.jwtService.sign(payload);
 
     // create refresh token using separate secret so you can revoke access by changing refresh secret
@@ -28,7 +28,7 @@ export class AuthService {
       { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '7d' } as jwt.SignOptions,
     );
 
-    await this.usersService.setRefreshToken(user.users_id, refreshToken);
+    await this.usersService.setRefreshToken(user.id, refreshToken);
 
     return { accessToken, refreshToken };
   }
@@ -54,7 +54,7 @@ export class AuthService {
       }
 
       const payload = {
-        sub: found.users_id,
+        sub: found.id,
         username: found.username,
         role: found.role,
       };
@@ -69,7 +69,7 @@ export class AuthService {
         } as jwt.SignOptions,
       );
 
-      await this.usersService.setRefreshToken(found.users_id, newRefresh);
+      await this.usersService.setRefreshToken(found.id, newRefresh);
 
       return { accessToken, refreshToken: newRefresh };
     } catch (err) {

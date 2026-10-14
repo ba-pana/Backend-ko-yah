@@ -13,33 +13,33 @@ export class BrandService {
       'INSERT INTO brand (brand_name) VALUES (?)',
       [brand_name],
     );
-    return { brand_id: result.insertId, brand_name: brand_name };
+    return { id: result.insertId, brand_name: brand_name };
   }
 
   async findByBrand(brand_name: string) {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
-      'SELECT brand_id, brand_name FROM brand WHERE brand_name = ?',
+      'SELECT * FROM brand WHERE brand_name = ?',
       [brand_name],
     );
     return rows[0];
   }
 
-  async findById(brand_id: number) {
+  async findById(id: number) {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
-      'SELECT brand_id, brand_name FROM brand WHERE brand_id = ?',
-      [brand_id],
+      'SELECT * FROM brand WHERE id = ?',
+      [id],
     );
     return rows[0];
   }
 
   async getAll() {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
-      'SELECT brand_id, brand_name FROM brand',
+      'SELECT * FROM brand',
     );
     return rows;
   }
 
-  async updateBrand(brand_id: number, partial: { brand_name?: string }) {
+  async updateBrand(id: number, partial: { brand_name?: string }) {
     const fields: string[] = [];
     const values: any[] = [];
 
@@ -48,20 +48,20 @@ export class BrandService {
       values.push(partial.brand_name);
     }
 
-    if (fields.length === 0) return await this.findById(brand_id);
+    if (fields.length === 0) return await this.findById(id);
 
-    values.push(brand_id);
+    values.push(id);
 
-    const sql = `UPDATE brand SET ${fields.join(', ')} WHERE brand_id = ?`;
+    const sql = `UPDATE brand SET ${fields.join(', ')} WHERE id = ?`;
     await this.pool().execute(sql, values);
 
-    return this.findById(brand_id);
+    return this.findById(id);
   }
 
-  async deleteBrand(brand_id: number) {
+  async deleteBrand(id: number) {
     const [result] = await this.pool().execute<OkPacket>(
-      'DELETE FROM brand WHERE brand_id = ?',
-      [brand_id],
+      'DELETE FROM brand WHERE id = ?',
+      [id],
     );
     return result.affectedRows > 0;
   }

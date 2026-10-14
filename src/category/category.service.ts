@@ -13,33 +13,33 @@ export class CategoryService {
       'INSERT INTO category (category_name) VALUES (?)',
       [category_name],
     );
-    return { category_id: result.insertId, category_name };
+    return { id: result.insertId, category_name };
   }
-
+  
   async findByCategory(category_name: string) {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
-      'SELECT category_id, category_name FROM category WHERE category_name = ?',
+      'SELECT * FROM category WHERE category_name = ?',
       [category_name],
     );
     return rows[0];
   }
 
-  async findById(category_id: number) {
+  async findById(id: number) {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
-      'SELECT category_id, category_name FROM category WHERE category_id = ?',
-      [category_id],
+      'SELECT * FROM category WHERE id = ?',
+      [id],
     );
     return rows[0];
   }
 
   async getAll() {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
-      'SELECT category_id, category_name FROM category',
+      'SELECT * FROM category',
     );
     return rows;
   }
 
-  async updateCategory(category_id: number, partial: { category_name?: string }) {
+  async updateCategory(id: number, partial: { category_name?: string }) {
     const fields: string[] = [];
     const values: any[] = [];
 
@@ -48,20 +48,20 @@ export class CategoryService {
       values.push(partial.category_name);
     }
 
-    if (fields.length === 0) return await this.findById(category_id);
+    if (fields.length === 0) return await this.findById(id);
 
-    values.push(category_id);
+    values.push(id);
 
-    const sql = `UPDATE category SET ${fields.join(', ')} WHERE category_id = ?`;
+    const sql = `UPDATE category SET ${fields.join(', ')} WHERE id = ?`;
     await this.pool().execute(sql, values);
 
-    return this.findById(category_id);
+    return this.findById(id);
   }
 
-  async deleteCategory(category_id: number) {
+  async deleteCategory(id: number) {
     const [result] = await this.pool().execute<OkPacket>(
-      'DELETE FROM category WHERE category_id = ?',
-      [category_id],
+      'DELETE FROM category WHERE id = ?',
+      [id],
     );
     return result.affectedRows > 0;
   }
