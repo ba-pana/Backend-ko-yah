@@ -30,7 +30,7 @@ export class AuthService {
 
     await this.usersService.setRefreshToken(user.id, refreshToken);
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, role: user.role };
   }
 
   async logout(userId: number) {
